@@ -49,7 +49,7 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
 
     log("-------------")
     //await storeImages(imagesLocation)
-    arguments = [
+    const args = [
         vrfCoordinatorV2Address,
         subscriptionId,
         networkConfig[chainId]["gasLane"],
@@ -59,7 +59,7 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
     ]
     const randomIpfsNft = await deploy("RandomIpfsNft", {
         from: deployer,
-        args: arguments,
+        args: args,
         log: true,
         waitConfirmations: network.config.blockConfirmations || 1,
     })

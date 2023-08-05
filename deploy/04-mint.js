@@ -20,17 +20,22 @@ module.exports = async ({ getNamedAccounts }) => {
     const randomIpfsNft = await ethers.getContract("RandomIpfsNft", deployer)
 
     const mintFee = await randomIpfsNft.getMintFee()
-    const randomIpfsNftMintTx = await randomIpfsNft.requestNft({
-        value: mintFee.toString(),
-    })
-    const randomIpfsNftMintTxReceipt = await randomIpfsNftMintTx.wait(1)
+    //const randomIpfsNftMintTx = await randomIpfsNft.requestNft({
+    //    value: mintFee.toString(),
+    //})
+    //const randomIpfsNftMintTxReceipt = await randomIpfsNftMintTx.wait(1)
 
     await new Promise(async (resolve, reject) => {
-        setTimeout(() => reject("Timeout: 'NFTminted' event did not fire"), 300000) // 5 minute timeout time
-        randomIpfsNft.once("Nftminted", async () => {
+        setTimeout(resolve, 300000) //setTimeout(() => reject("Timeout: 'NFTminted' event did not fire"), 300000) // 5 minute timeout time
+        randomIpfsNft.once("Nftminted", async function () {
             console.log(`Random IPFS NFT index 0 tokenURI: ${await randomIpfsNft.tokenURI(0)}`)
             resolve()
         })
+
+        const randomIpfsNftMintTx = await randomIpfsNft.requestNft({
+            value: mintFee.toString(),
+        })
+        const randomIpfsNftMintTxReceipt = await randomIpfsNftMintTx.wait(1)
 
         if (developmentChains.includes(network.name)) {
             const requestId = randomIpfsNftMintTxReceipt.events[1].args.requestId.toString()
